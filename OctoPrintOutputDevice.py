@@ -18,6 +18,8 @@ from .PowerPlugins import PowerPlugins
 from .WebcamsModel import WebcamsModel
 from .UploadOptions import UploadOptions
 
+from datetime import datetime
+
 try:
     # Cura 4.1 and newer
     from cura.PrinterOutput.PrinterOutputDevice import (
@@ -788,6 +790,10 @@ class OctoPrintOutputDevice(NetworkedPrinterOutputDevice):
         path = self._upload_options.filePath.lstrip("/ ").rstrip("/ ")
         if path != "":
             job_name = "%s/%s" % (path, job_name)
+            
+        ## Add timestamp to jobname - so the same job can be added to the queue any number of times
+        now = datetime.now()
+        job_name = "%s-%s" % (job_name, now.strftime("%Y-%m-%d_%H-%M-%S.%f"))
 
         print_info = CuraApplication.getInstance().getPrintInformation()
 
